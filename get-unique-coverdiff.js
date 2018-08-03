@@ -1,6 +1,7 @@
 const fs = require('fs')
 const path = require('path')
-var uniq = require('lodash.uniq');
+var uniqWith = require('lodash.uniqwith');
+var isEqual = require('lodash.isequal');
 
 const toJsonOrNull = el => {
   try {
@@ -22,10 +23,11 @@ console.log('filepath: ', filePath)
 
 var fileContents = fs.readFileSync(path.resolve(filePath), 'utf-8').split('\n')
 
-var result = uniq(
+var result = uniqWith(
   fileContents
     .map(el => toJsonOrNull(el))
-    .filter(el => el !== null)
+    .filter(el => el !== null),
+  isEqual
 )
 
 console.log('uniq cover differences:\n\n', JSON.stringify(result, null, 2))
